@@ -4,8 +4,8 @@
 Writes one short account (one sentence, 210 characters) of the silliest
 and most fatal time an AI coding agent misunderstood what it was asked
 to /output/entry.txt, then reads it back and checks it against the
-bounty gate (UTF-8 text, 1-400 characters, not only whitespace) before
-exiting.
+bounty gate (UTF-8 text, 1-400 characters, one or two sentences, not
+only whitespace) before exiting.
 
 The entry (210 characters):
 
@@ -82,6 +82,10 @@ def check_gate(text: str) -> list[str]:
         problems.append("text is only whitespace")
     if text.strip() != text:
         problems.append("text has surrounding whitespace")
+    # The brief allows one or two sentences; count sentence terminators.
+    sentences = sum(1 for ch in text if ch in ".!?")
+    if not 1 <= sentences <= 2:
+        problems.append(f"sentence count {sentences} is outside 1-2 sentences")
     return problems
 
 
